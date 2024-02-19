@@ -1,34 +1,22 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { addTodoAction } from "../store/todo/todoActions";
-import { Link } from "react-router-dom";
-const CreateTodoPage = () => {
-  const dispatch = useDispatch();
-  const [value, setValue] = useState("");
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import UserForm from "../components/UserForm";
+import { createUser } from "../store/users/usersThunk"; // Adjust the import path
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    const todoItem = {
-      id: Date.now(),
-      text: value,
-      done: false,
-    };
-    dispatch(addTodoAction(todoItem));
-    setValue("");
+const CreatePage = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const loading = useSelector((state) => state.users.loading); // Adjust according to your state shape
+
+  const onSubmit = (name, isCompleted) => {
+    dispatch(createUser({ name, isCompleted }))
+      .then(() => navigate("/users"))
+      .catch((error) => console.log(error));
   };
 
-  return (
-    <form onSubmit={onSubmit}>
-      <input
-        type="text"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-      />
-      <button>Submit</button>
+  if (loading) return <p>Is Loading ...</p>;
 
-      <Link to={"/"}>To List</Link>
-    </form>
-  );
+  return <UserForm onFormSubmit={onSubmit} />;
 };
 
-export default CreateTodoPage;
+export default CreatePage;

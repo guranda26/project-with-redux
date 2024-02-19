@@ -1,6 +1,7 @@
 {
   "name": "task-with-redux",
   "version": "0.1.0",
+  "proxy": "https://crudapi.co.uk/",
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.1",
